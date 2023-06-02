@@ -1,0 +1,54 @@
+﻿@page
+@model QuanLyNhaSach.Pages.BookViewModel
+
+@{
+	ViewData["Title"] = "Books";
+}
+
+@using Entities;
+
+<form method="post">
+	<input type="text" name="key" placeholder="Từ khoá tìm kiếm...">
+    <input type="submit" value="Tìm kiếm"/>
+</form>
+<div><a href="/Product_Add">Thêm mới</a></div>
+<table>
+	<tr>
+		<th>Mã sản phẩm</th>
+		<th>Tên măt hàng</th>
+		<th>Loại hàng</th>
+		<th>Công ty</th>
+		<th>Ngày sản xuất</th>
+		<th>Hạn sử dụng</th>
+		<th>Giá</th>
+		<th>Số lượng</th>
+		<th>Thao tác</th>
+	</tr>
+	
+	@{
+		IProcessing<Category> _category = (IProcessing<Category>)ObjectHandler.ObjectHandler.GetCategoryService();
+		foreach (Product item in Model.products)
+		{
+			Category category;
+			try
+			{
+				category = _category.SearchBy("Id", item.Category.ToString(), 0)[0];
+			}
+			catch
+			{
+				category = new Category();
+			}
+			<tr>
+				<td>@item.Id</td>
+				<td>@item.Name</td>
+				<td>@category.Name</td>
+				<td>@item.Company</td>
+				<td>@item.Mfg.ToString("d/M/yyyy")</td>
+				<td>@item.Exp.ToString("d/M/yyyy")</td>
+				<td>@item.Price</td>
+				<td>@item.Quantities</td>
+				<td><a href="/Product_Update?id=@item.Id">Sửa</a> <a href="/Product_Del?id=@item.Id">Xoá</a></td>
+			</tr>
+		}
+	}
+</table>
