@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using QuanLyNhaSach.DataAccess;
 using QuanLyNhaSach.Entities;
-using Newtonsoft.Json;
+using QuanLyNhaSach.Controller;
+using QuanLyNhaSach.DataAccess;
 
 namespace QuanLyNhaSach.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -17,7 +16,6 @@ namespace QuanLyNhaSach.Pages
 
         public void OnGet()
         {
-            
         }
     }
 }

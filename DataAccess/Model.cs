@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuanLyNhaSach.Entities;
 using System.Reflection;
+using EFCore.BulkExtensions;
 
 namespace QuanLyNhaSach.DataAccess
 {
-    public class Model<TEntity>: IModel<TEntity> where TEntity : Entity
+    public class Model<TEntity>: IModel<TEntity> where TEntity : Base
     {
         protected readonly DataContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;
@@ -13,6 +14,7 @@ namespace QuanLyNhaSach.DataAccess
             _dbContext = (DataContext)Injector.Injector.GetDb();
             _dbSet = _dbContext.Set<TEntity>();
         }
+
         public async Task<List<TEntity>> GetListAsync()
         {
             return await _dbSet.ToListAsync();
@@ -23,9 +25,16 @@ namespace QuanLyNhaSach.DataAccess
         }
         public async Task<TEntity> AddAsync(TEntity entity)
         {
+            entity.CreatedAt = DateTime.Now;
+            entity.UpdatedAt = DateTime.Now;
             _dbSet.Add(entity);
             await _dbContext.SaveChangesAsync();
             return entity;
+        }
+        public async Task BatchAddAsync(List<TEntity> entities)
+        {
+            await _dbContext.BulkInsertAsync(entities);
+            return;
         }
         public async Task UpdateAsync(string id, TEntity newEntity)
         {
@@ -49,10 +58,21 @@ namespace QuanLyNhaSach.DataAccess
             }
             return;
         }
+        public async Task BatchUpdateAsync(List<TEntity> entities)
+        {
+            await _dbContext.BulkUpdateAsync(entities);
+            return;
+        }
         public async Task DeleteAsync(TEntity entity)
         {
             _dbSet.Remove(entity);
             await _dbContext.SaveChangesAsync();
+            return;
+        }
+        
+        public async Task BatchDeleteAsync(List<TEntity> entities)
+        {
+            await _dbContext.BulkDeleteAsync(entities);
             return;
         }
     }

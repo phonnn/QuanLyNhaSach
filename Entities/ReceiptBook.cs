@@ -1,8 +1,9 @@
 ﻿namespace QuanLyNhaSach.Entities
 {
-    public class ReceiptBook : Entity
+    public class ReceiptBook : Base
     {
-        public Book Book { get; set; }
         public Receipt Receipt { get; set; }
+        public Book Book { get; set; }
+        public int Price { get; set; }
     }
 }

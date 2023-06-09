@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuanLyNhaSach.DataAccess;
 using QuanLyNhaSach.Entities;
+using QuanLyNhaSach.Controller;
 
 namespace QuanLyNhaSach.Injector
 {
@@ -10,7 +11,7 @@ namespace QuanLyNhaSach.Injector
                    RegisteredObjects = new Dictionary<String, Object>();
         public static Object GetDb()
         {
-            string ConnectionString = "Server=DESKTOP-9J7E6C9\\SQLDEV2019;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+            string ConnectionString = "Server=DESKTOP-9J7E6C9\\SQLDEV2019;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
             if (!RegisteredObjects.ContainsKey("database"))
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
@@ -22,7 +23,7 @@ namespace QuanLyNhaSach.Injector
             return RegisteredObjects["database"];
         }
 
-        public static Object GetModel<T>() where T : Entity
+        public static Object GetModel<T>() where T : Base
         {
             string modelName = typeof(T).Name;
             if (!RegisteredObjects.ContainsKey(modelName))
@@ -32,6 +33,17 @@ namespace QuanLyNhaSach.Injector
             }
 
             return RegisteredObjects[modelName];
+        }
+        public static Object? GetController<Entity>() where Entity : new()
+        {
+            string controllerName = typeof(Entity).Name;
+            if (!RegisteredObjects.ContainsKey(controllerName))
+            {
+                var controller = new Entity();
+                RegisteredObjects.Add(controllerName, controller);
+            }
+
+            return RegisteredObjects[controllerName];
         }
     }
 }

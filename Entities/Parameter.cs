@@ -1,6 +1,6 @@
 ﻿namespace QuanLyNhaSach.Entities
 {
-    public class Parameter : Entity
+    public class Parameter : Base
     {
         public string Name { get; set; }
         public string Type { get; set; }

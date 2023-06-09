@@ -1,0 +1,13 @@
+﻿@page
+@model QuanLyNhaSach.Pages.BookType.UpdateModel
+@{
+	ViewData["Title"] = "Book Type";
+}
+@using QuanLyNhaSach.Entities;
+<form method="post">
+	<label>Tên loại hàng:</label><br>
+	<input type="text" name="name" value="@Model.type.Name"><br>
+
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/BookType/View';" ><br>
+	@Model.notify
+</form> 

@@ -1,6 +1,6 @@
 ﻿namespace QuanLyNhaSach.Entities
 {
-    public class User : Entity
+    public class User : Base
     {
         public string Username { get; set; }
         public string Password { get; set; }

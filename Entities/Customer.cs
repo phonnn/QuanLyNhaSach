@@ -1,6 +1,6 @@
 ﻿namespace QuanLyNhaSach.Entities
 {
-    public class Customer : Entity
+    public class Customer : Base
     {
         public string Name { get; set; }
         public string Address { get; set; }

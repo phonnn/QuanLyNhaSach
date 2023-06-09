@@ -12,7 +12,6 @@ namespace QuanLyNhaSach.DataAccess
         public DbSet<BookType> BookType { get; set; }
         public DbSet<BuyReceipt> BuyReceipt { get; set; }
         public DbSet<Customer> Customer { get; set; }
-        public DbSet<Entity> Entity { get; set; }
         public DbSet<Parameter> Parameter { get; set; }
         public DbSet<Receipt> Receipt { get; set; }
         public DbSet<ReceiptBook> ReceiptBook { get; set; }
