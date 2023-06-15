@@ -1,7 +1,12 @@
-﻿namespace QuanLyNhaSach.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace QuanLyNhaSach.Entities
 {
-    public class Author : Base
+    public partial class Author : Base
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
+        public virtual ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

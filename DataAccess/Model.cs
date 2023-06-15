@@ -15,7 +15,7 @@ namespace QuanLyNhaSach.DataAccess
             _dbSet = _dbContext.Set<TEntity>();
         }
 
-        public async Task<List<TEntity>> GetListAsync()
+        public async virtual Task<List<TEntity>> GetListAsync()
         {
             return await _dbSet.ToListAsync();
         }
@@ -33,6 +33,12 @@ namespace QuanLyNhaSach.DataAccess
         }
         public async Task BatchAddAsync(List<TEntity> entities)
         {
+            foreach (TEntity entity in entities) 
+            {
+				entity.CreatedAt = DateTime.Now;
+				entity.UpdatedAt = DateTime.Now;
+			}
+
             await _dbContext.BulkInsertAsync(entities);
             return;
         }
@@ -49,12 +55,21 @@ namespace QuanLyNhaSach.DataAccess
                 {
                     if (!omit.Contains(info.Name))
                     {
-                        var newItemField = newObjectEntity.GetProperty(info.Name);
-                        info.SetValue(result, newItemField.GetValue(newEntity, null));
+                        try
+                        {
+                            var newItemField = newObjectEntity.GetProperty(info.Name);
+                            var value = newItemField.GetValue(newEntity, null);
+                            info.SetValue(result, newItemField.GetValue(newEntity, null));
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+
                     }
                 }
 
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             return;
         }

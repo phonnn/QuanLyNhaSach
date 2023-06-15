@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuanLyNhaSach.Entities;
-using QuanLyNhaSach.Controller;
+using QuanLyNhaSach.Processing;
 using QuanLyNhaSach.DataAccess;
 
 namespace QuanLyNhaSach.Pages

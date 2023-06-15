@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using QuanLyNhaSach.Controller;
+using QuanLyNhaSach.Processing;
 
 namespace QuanLyNhaSach.Pages.BookType
 {
     public class UpdateModel : PageModel
     {
-        private readonly IBase<Entities.BookType> _controller = (IBase<Entities.BookType>)Injector.Injector.GetController<BookTypeController>();
-        public string notify;
-        public Entities.BookType type;
+        private readonly IBase<Entities.BookType> _Processing = (IBase<Entities.BookType>)Injector.Injector.GetProcessing<BookTypeProcessing>();
+        private static string _referer = string.Empty;
+        public string notify = string.Empty;
+        public Entities.BookType type = new Entities.BookType();
 
         [BindProperty(SupportsGet = true)]
         public string ID { get; set; }
@@ -16,22 +17,22 @@ namespace QuanLyNhaSach.Pages.BookType
         [BindProperty]
         public string Name { get; set; }
 
-        public void OnGet()
+        public async Task OnGet()
         {
-            type = _controller.SearchById(ID);
+            _referer = Request.Headers["Referer"].ToString();
+            type = await _Processing.SearchById(ID);
         }
         public async Task OnPost()
         {
             try
             {
-                IBookType _tempController = (IBookType)_controller;
-                type = await _tempController.Update(ID, Name);
-                notify = "Sửa loại hàng thành công";
+                IBookType _tempProcessing = (IBookType)_Processing;
+                type = await _tempProcessing.Update(ID, Name);
                 Response.Redirect("/BookType/View");
             }
             catch (Exception ex)
             {
-                type = _controller.SearchById(ID);
+                type = await _Processing.SearchById(ID);
                 notify = ex.Message;
             }
         }

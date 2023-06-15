@@ -1,0 +1,39 @@
+﻿@page
+@model QuanLyNhaSach.Pages.User.ViewModel
+@{
+	ViewData["Title"] = "User";
+}
+@using QuanLyNhaSach.Entities;
+
+<form method="post">
+	<input type="text" name="key" placeholder="Từ khoá tìm kiếm...">
+    <input type="submit" value="Tìm kiếm"/>
+</form>
+<div><a href="/User/Add">Thêm mới</a></div>
+<table>
+	<tr>
+		<th>Mã nhân viên</th>
+		<th>Tên nhân viên</th>
+		<th>Trạng thái</th>
+		<th>Thao tác</th>
+	</tr>
+	@foreach (User item in Model.users)
+	{
+		<tr>
+			<td>@item.Id</td>
+			<td>@item.Name</td>
+			@if (item.Status == 1) 
+			{
+				<td>Hoạt động</td>
+			} else 
+			{
+				<td>Không hoạt động</td>
+			}
+
+			<td>
+				<a href="/User/Update?id=@item.Id">Sửa</a> | 
+				<a href="/User/Delete?id=@item.Id">Xoá</a>
+			</td> 
+		</tr>
+	}
+</table>

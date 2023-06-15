@@ -1,0 +1,12 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Customer.DeleteModel
+@{
+	ViewData["Title"] = "Customer";
+}
+
+<div>Bạn có muốn xoá khách hàng @Model.customer.Name không?</div>
+<div>@Model.notify</div>
+<form method="post">
+	<input type="submit" value="Có"> <input type="button" value="Không" onclick="window.location='/Customer/View';" ><br>
+</form>
+

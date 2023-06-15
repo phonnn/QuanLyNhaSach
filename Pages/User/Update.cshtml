@@ -1,0 +1,33 @@
+﻿@page
+@model QuanLyNhaSach.Pages.User.UpdateModel
+@{
+	ViewData["Title"] = "User";
+}
+@using QuanLyNhaSach.Entities;
+<form method="post">
+	<label>Tên nhân viên:</label><br>
+	<input type="text" name="name" value="@Model.user.Name"><br>
+
+	<label>Mật khẩu</label><br>
+	<input type="text" name="password" value="@Model.user.Password"><br><br>
+
+	<label>Trạng Thái:</label><br>
+	@if (@Model.user.Status == 1)
+	{
+		<input type="radio" id="active" name="status" value="1" checked>
+ 		<label for="active">Hoạt động</label><br>
+ 		<input type="radio" id="inactive" name="status" value="0">
+		<label for="inactive">Không hoạt động</label><br>
+	} else
+	{
+		<input type="radio" id="active" name="status" value="1">
+ 		<label for="active">Hoạt động</label><br>
+ 		<input type="radio" id="inactive" name="status" value="0" checked>
+		<label for="inactive">Không hoạt động</label><br>
+	}
+
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/User/View';" ><br>
+	@Model.notify
+</form> 
+
+

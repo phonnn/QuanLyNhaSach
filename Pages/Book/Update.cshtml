@@ -1,0 +1,59 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Book.UpdateModel
+@{
+	ViewData["Title"] = "Book";
+}
+@using QuanLyNhaSach.Entities;
+@using QuanLyNhaSach.Processing;
+
+<form method="post">
+	<label>Tên tác giả:</label><br>
+	<input type="text" name="name" value="@Model.book.Name"><br>
+
+	<label>Loại hàng:</label><br>
+	<select name="btype">
+		@{
+			IBase<BookType> _type = (IBase<BookType>)Injector.Injector.GetProcessing<BookTypeProcessing>();
+			List<BookType> types = await _type.GetAllAsync();
+			foreach (BookType item in types)
+			{	
+				if(@Model.book.Type == item.Id)
+				{
+					<option value="@item.Id" selected>@item.Name</option>
+				}
+				else
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			}
+		}
+	</select><br>
+
+	<label>Tác giả:</label><br>
+	<select name="author">
+		@{
+			IBase<Author> _author = (IBase<Author>)Injector.Injector.GetProcessing<AuthorProcessing>();
+			List<Author> authors = await _author.GetAllAsync();
+			foreach (Author item in authors)
+			{	
+				if(@Model.book.Author == item.Id)
+				{
+					<option value="@item.Id" selected>@item.Name</option>
+				}
+				else
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			}
+		}
+	</select><br>
+	
+	<label>Giá:</label><br>
+	<input type="number" name="price" value=@Model.book.Price><br><br>
+
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/Book/View';" ><br>
+	@Model.notify
+</form> 
+
+
+

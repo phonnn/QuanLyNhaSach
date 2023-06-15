@@ -1,28 +1,35 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using QuanLyNhaSach.Controller;
+using QuanLyNhaSach.Processing;
 
 namespace QuanLyNhaSach.Pages.BookType
 {
     public class AddModel : PageModel
     {
-		private readonly IBookType _controller = (IBookType)Injector.Injector.GetController<BookTypeController>();
-		public string notify;
+		private readonly IBookType _Processing = (IBookType)Injector.Injector.GetProcessing<BookTypeProcessing>();
+		public string notify = string.Empty;
+        private static string _referer = string.Empty;
 
-		[BindProperty]
+        [BindProperty]
 		public string Name { get; set; }
 		public void OnGet()
         {
-			notify = String.Empty;
-		}
+            _referer = Request.Headers["Referer"].ToString();
+        }
 
-		public async Task OnPost()
+        public async Task OnPost()
 		{
             try
             {
-                await _controller.Add(Name);
-                notify = "Đã thêm loại sách";
-                Response.Redirect("/BookType/View");
+                await _Processing.Add(Name);
+                if (_referer != string.Empty)
+                {
+                    Response.Redirect(_referer);
+                }
+                else
+                {
+                    Response.Redirect("/BookType/View");
+                }
             }
             catch (Exception ex)
             {

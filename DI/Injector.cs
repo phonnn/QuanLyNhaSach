@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuanLyNhaSach.DataAccess;
 using QuanLyNhaSach.Entities;
-using QuanLyNhaSach.Controller;
+using QuanLyNhaSach.Processing;
 
 namespace QuanLyNhaSach.Injector
 {
@@ -11,11 +11,11 @@ namespace QuanLyNhaSach.Injector
                    RegisteredObjects = new Dictionary<String, Object>();
         public static Object GetDb()
         {
-            string ConnectionString = "Server=DESKTOP-9J7E6C9\\SQLDEV2019;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
+            string connectionString = "Server=DESKTOP-9J7E6C9\\SQLDEV2019;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
             if (!RegisteredObjects.ContainsKey("database"))
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-                optionsBuilder.UseSqlServer(ConnectionString);
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
                 DataContext dbContext = new DataContext(optionsBuilder.Options);
                 RegisteredObjects.Add("database", dbContext);
             }
@@ -34,7 +34,8 @@ namespace QuanLyNhaSach.Injector
 
             return RegisteredObjects[modelName];
         }
-        public static Object? GetController<Entity>() where Entity : new()
+
+        public static Object? GetProcessing<Entity>() where Entity : new()
         {
             string controllerName = typeof(Entity).Name;
             if (!RegisteredObjects.ContainsKey(controllerName))

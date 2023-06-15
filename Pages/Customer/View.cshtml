@@ -1,0 +1,40 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Customer.ViewModel
+@{
+	ViewData["Title"] = "Customer";
+}
+@using QuanLyNhaSach.Entities;
+
+<form method="post">
+	<input type="text" name="key" placeholder="Từ khoá tìm kiếm...">
+    <input type="submit" value="Tìm kiếm"/>
+</form>
+<div><a href="/Customer/Add">Thêm mới</a></div>
+<table>
+	<tr>
+		<th>Mã khách hàng</th>
+		<th>Tên khách hàng</th>
+		<th>Địa chỉ</th>
+		<th>Email</th>
+		<th>Số điện thoại</th>
+		<th>Dư nợ</th>
+		<th>Thao tác</th>
+	</tr>
+	@foreach (Customer item in Model.customers)
+	{
+	<tr>
+		<td>@item.Id</td>
+		<td>@item.Name</td>
+		<td>@item.Address</td>
+		<td>@item.Email</td>
+		<td>@item.Number</td>
+		<td>@item.Debt</td>
+		<td>
+			<a href="/Receipt/Sell?customer=@item.Id">Mua hàng</a> |
+			<a href="/Bill/Add?customer=@item.Id">Thanh toán</a> |
+			<a href="/Customer/Update?id=@item.Id">Sửa</a> | 
+			<a href="/Customer/Delete?id=@item.Id">Xoá</a>
+		</td> 
+	</tr>
+	}
+</table>

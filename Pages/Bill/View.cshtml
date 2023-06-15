@@ -1,0 +1,28 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Bill.ViewModel
+@{
+	ViewData["Title"] = "Bill";
+}
+@using QuanLyNhaSach.Entities;
+
+<form method="post">
+	<input type="text" name="key" placeholder="Từ khoá tìm kiếm...">
+    <input type="submit" value="Tìm kiếm"/>
+</form>
+<table>
+	<tr>
+		<th>Mã phiếu thanh toán</th>
+		<th>Tên khách hàng</th>
+		<th>Số tiền thanh toán</th>
+		<th>Hành động</th>
+	</tr>
+	@foreach (Bill item in Model.bills)
+	{
+	<tr>
+		<td>@item.Id</td>
+		<td>@item.CustomerNavigation.Name</td>
+		<td>@item.Amount</td>
+		<td><a href="/Bill/Update?id=@item.Id">Sửa</a> | <a href="/Bill/Delete?id=@item.Id">Xoá</a></td>
+	</tr>
+	}
+</table>

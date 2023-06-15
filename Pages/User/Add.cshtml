@@ -1,0 +1,20 @@
+﻿@page
+@model QuanLyNhaSach.Pages.User.AddModel
+@{
+	ViewData["Title"] = "User";
+}
+
+@using QuanLyNhaSach.Entities;
+<form method="post">
+	<label>Tên khách hàng:</label><br>
+	<input type="text" name="name"><br><br>
+
+	<label>Tên đăng nhập:</label><br>
+	<input type="text" name="username"><br><br>
+
+	<label>Mật khẩu:</label><br>
+	<input type="text" name="password"><br><br>
+
+	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="window.location='/User/View';" ><br>
+	@Model.notify
+</form> 

@@ -1,0 +1,23 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Customer.AddModel
+@{
+	ViewData["Title"] = "Customer";
+}
+
+@using QuanLyNhaSach.Entities;
+<form method="post">
+	<label>Tên khách hàng:</label><br>
+	<input type="text" name="name"><br><br>
+
+	<label>Địa chỉ:</label><br>
+	<input type="text" name="address"><br><br>
+
+	<label>Email:</label><br>
+	<input type="text" name="email"><br><br>
+
+	<label>Số điện thoại:</label><br>
+	<input type="text" name="number"><br><br>
+
+	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="window.location='/Customer/View';" ><br>
+	@Model.notify
+</form> 

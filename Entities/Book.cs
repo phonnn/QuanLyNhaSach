@@ -1,10 +1,22 @@
-﻿namespace QuanLyNhaSach.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace QuanLyNhaSach.Entities
 {
-    public class Book : Base
+    public partial class Book : Base
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
+
         public int Price { get; set; }
-        public BookType Type { get; set; }
-        public Author Author { get; set; }
+
+        public Guid? Type { get; set; }
+
+        public Guid? Author { get; set; }
+
+        public virtual Author? AuthorNavigation { get; set; }
+
+        public virtual ICollection<ReceiptBook> ReceiptBooks { get; set; } = new List<ReceiptBook>();
+
+        public virtual BookType? TypeNavigation { get; set; }
     }
 }

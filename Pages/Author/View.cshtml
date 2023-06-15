@@ -1,0 +1,27 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Author.ViewModel
+@{
+	ViewData["Title"] = "Author";
+}
+@using QuanLyNhaSach.Entities;
+
+<form method="post">
+	<input type="text" name="key" placeholder="Từ khoá tìm kiếm...">
+    <input type="submit" value="Tìm kiếm"/>
+</form>
+<div><a href="/Author/Add">Thêm mới</a></div>
+<table>
+	<tr>
+		<th>Mã tác giả</th>
+		<th>Tên tác giả</th>
+		<th>Thao tác</th>
+	</tr>
+	@foreach (Author item in Model.authors)
+	{
+	<tr>
+		<td>@item.Id</td>
+		<td>@item.Name</td>
+		<td><a href="/Author/Update?id=@item.Id">Sửa</a> | <a href="/Author/Delete?id=@item.Id">Xoá</a></td>
+	</tr>
+	}
+</table>

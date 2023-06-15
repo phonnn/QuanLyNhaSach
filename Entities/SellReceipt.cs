@@ -1,7 +1,14 @@
-﻿namespace QuanLyNhaSach.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace QuanLyNhaSach.Entities
 {
-    public class SellReceipt : Receipt
+    public partial class SellReceipt : Receipt
     {
-        public Customer Customer { get; set; }
+        public Guid? Customer { get; set; }
+
+        public virtual Customer? CustomerNavigation { get; set; }
+
+        public virtual Receipt IdNavigation { get; set; } = null!;
     }
 }

@@ -1,0 +1,44 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Book.AddModel
+@{
+	ViewData["Title"] = "Book";
+}
+
+@using QuanLyNhaSach.Entities;
+@using QuanLyNhaSach.Processing;
+
+<form method="post">
+	<label>Tên sách:</label><br>
+	<input type="text" name="name"><br><br>
+
+	<label>Thể loại:</label><br>
+	<select name="btype">
+		@{
+			IBase<BookType> _type = (IBase<BookType>)Injector.Injector.GetProcessing<BookTypeProcessing>();
+			List<BookType> types = await _type.GetAllAsync();
+			foreach (BookType item in types)
+			{	
+				<option value="@item.Id">@item.Name</option>
+			}
+		}
+	</select>
+	<input type="button" value="Thêm" onclick="window.location='/BookType/Add';"><br><br>
+
+	<label>Tác giả:</label><br>
+	<select name="author">
+		@{
+			IBase<Author> _author = (IBase<Author>)Injector.Injector.GetProcessing<AuthorProcessing>();
+			List<Author> authors = await _author.GetAllAsync();
+			foreach (Author item in authors)
+			{	
+				<option value="@item.Id">@item.Name</option>
+			}
+		}
+	</select>
+	<input type="button" value="Thêm" onclick="window.location='/Author/Add';"><br><br>
+	
+	<label>Giá:</label><br>
+	<input type="number" name="price"><br><br>
+
+	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="history.go(-1); return false;" ><br>
+</form> 

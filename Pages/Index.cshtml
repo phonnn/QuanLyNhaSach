@@ -3,8 +3,19 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@using QuanLyNhaSach.Entities;
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<form method="post">
+	<label>Tên đăng nhập:</label><br>
+	<input type="text" name="username"><br><br>
+
+	<label>Mật khẩu:</label><br>
+	<input type="password" name="password"><br><br>
+
+	<input type="submit" value="Đăng nhập"><br />
+</form> 

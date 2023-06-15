@@ -1,0 +1,12 @@
+﻿@page
+@model QuanLyNhaSach.Pages.User.DeleteModel
+@{
+	ViewData["Title"] = "User";
+}
+
+<div>Bạn có muốn xoá tác giả @Model.user.Name không?</div>
+<div>@Model.notify</div>
+<form method="post">
+	<input type="submit" value="Có"> <input type="button" value="Không" onclick="window.location='/User/View';" ><br>
+</form>
+

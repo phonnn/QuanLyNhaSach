@@ -4,10 +4,10 @@
 	ViewData["Title"] = "Book Type";
 }
 
-@using Entities;
+@using QuanLyNhaSach.Entities;
 <form method="post">
 	<label>Tên thể loại sách:</label><br>
 	<input type="text" name="name"><br><br>
-	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="window.location='/BookType/View';" ><br>
+	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="history.go(-1); return false;" ><br>
 	@Model.notify
 </form> 

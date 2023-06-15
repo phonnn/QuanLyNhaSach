@@ -1,0 +1,13 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Author.UpdateModel
+@{
+	ViewData["Title"] = "Author";
+}
+@using QuanLyNhaSach.Entities;
+<form method="post">
+	<label>Tên tác giả:</label><br>
+	<input type="text" name="name" value="@Model.author.Name"><br>
+
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/Author/View';" ><br>
+	@Model.notify
+</form> 

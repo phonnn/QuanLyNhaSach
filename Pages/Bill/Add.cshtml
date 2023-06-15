@@ -1,0 +1,34 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Bill.AddModel
+@{
+	ViewData["Title"] = "Bill";
+}
+
+@using QuanLyNhaSach.Entities;
+@using QuanLyNhaSach.Processing;
+<form method="post">
+	<label>Khách hàng:</label><br>
+	<select name="customer">
+		@{
+			IBase<Customer> _customer = (IBase<Customer>)Injector.Injector.GetProcessing<CustomerProcessing>();
+			List<Customer> customers = await _customer.GetAllAsync();
+			foreach (Customer item in customers)
+			{	
+				if (Model.customer != null && item.Id == Model.customer.Id)
+				{
+					<option value="@item.Id" selected>@item.Name</option>
+				} else
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			}
+			
+		}
+	</select><br>
+
+	<label>Số tiền thanh toán:</label><br>
+	<input type="number" name="amount"><br><br>
+
+	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="history.go(-1); return false;" ><br>
+	@Model.notify
+</form> 

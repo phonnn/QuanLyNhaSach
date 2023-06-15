@@ -1,10 +1,20 @@
-﻿namespace QuanLyNhaSach.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace QuanLyNhaSach.Entities
 {
-    public class User : Base
+    public partial class User : Base
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Name { get; set; }
-        public int Status { get; set; }
+        public string Username { get; set; } = null!;
+
+        public string Password { get; set; } = null!;
+
+        public string? Name { get; set; }
+
+        public int? Status { get; set; }
+
+        public virtual ICollection<BuyReceipt> BuyReceipts { get; set; } = new List<BuyReceipt>();
+
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
     }
 }
