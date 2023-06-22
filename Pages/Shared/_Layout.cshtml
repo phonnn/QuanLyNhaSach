@@ -37,6 +37,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/User/View">Nhân viên</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Role/View">Quyền</a>
+                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <form id="logoutForm" method="get" asp-page="/User/Logout" class="form-inline">

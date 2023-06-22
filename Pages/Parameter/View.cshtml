@@ -1,0 +1,26 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Parameter.ViewModel
+@{
+	ViewData["Title"] = "Parameter";
+}
+@using QuanLyNhaSach.Entities;
+
+<table>
+	<tr>
+		<th>Tên tham số</th>
+		<th>Kiểu dữ liệu</th>
+		<th>Giá trị</th>
+		<th>Tình trạng</th>
+		<th>Hành động</th>
+	</tr>
+	@foreach (Parameter item in Model.parameters)
+	{
+	<tr>
+		<td>@item.Name</td>
+		<td>@item.Type</td>
+		<td>@item.Value</td>
+		<td>@item.Status</td>
+		<td><a href="/Parameter/Update?id=@item.Id">Sửa</a></td> 
+	</tr>
+	}
+</table>

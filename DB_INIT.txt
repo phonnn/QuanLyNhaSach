@@ -103,3 +103,10 @@ CREATE TABLE Parameter (
 	"value" varchar(255),
 	"status" int CHECK ("status" IN (0, 1))
 );
+GO
+INSERT INTO "Parameter" ("name", "type", "value", "status")
+VALUES 
+	('LuongNhapItNhat', 'int', '150', 1),
+	('TonKhoToiDa', 'int', '300', 1),
+	('DuNoToiDa', 'int', '20000', 1),
+	('TonKhoToiThieu', 'int', '20', 1);

@@ -1,0 +1,22 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Parameter.UpdateModel
+@{
+	ViewData["Title"] = "Parameter";
+}
+@using QuanLyNhaSach.Entities;
+<form method="post">
+	<label>Tên tham số:</label><br>
+	<input type="text" value="@Model.parameter.Name" disabled><br><br>
+
+	<label>Kiểu dữ liệu:</label><br>
+	<input type="text" value="@Model.parameter.Type" disabled><br><br>
+
+	<label>Giá trị:</label><br>
+	<input type="text" name="email" value="@Model.parameter.Value"><br><br>
+
+	<label>Tình trạng:</label><br>
+	<input type="text" name="status" value="@Model.parameter.Status"><br><br>
+
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/Parameter/View';"><br>
+	@Model.notify
+</form> 
