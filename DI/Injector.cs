@@ -11,7 +11,7 @@ namespace QuanLyNhaSach.Injector
                    RegisteredObjects = new Dictionary<String, Object>();
         public static Object GetDb()
         {
-            string connectionString = "Server=DESKTOP-9J7E6C9\\SQLDEV2019;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
+            string connectionString = "Server=DESKTOP-EK6KNM0;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
             if (!RegisteredObjects.ContainsKey("database"))
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
@@ -32,6 +32,14 @@ namespace QuanLyNhaSach.Injector
                 RegisteredObjects.Add(modelName, model);
             }
 
+            return RegisteredObjects[modelName];
+        }
+
+        public static Object SetModel<T>(IModel<T> Model) where T : Base
+        {
+            string modelName = typeof(T).Name;
+            IModel<T> model = Model;
+            RegisteredObjects[modelName] = model;
             return RegisteredObjects[modelName];
         }
 

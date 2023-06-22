@@ -11,11 +11,6 @@ namespace QuanLyNhaSach.Pages.Bill
         public async Task OnGet()
         {
             bills = await _Processing.GetAllAsync();
-            //if (!string.IsNullOrEmpty(CustomerId))
-            //{
-            //    IBill _tempProcessing = (IBill)_Processing;
-            //    bills = _tempProcessing.Search(CustomerId);
-            //}
         }
     }
 }

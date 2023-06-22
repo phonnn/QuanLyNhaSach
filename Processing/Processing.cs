@@ -9,6 +9,11 @@ namespace QuanLyNhaSach.Processing
         protected List<Model> _items = new List<Model>();
 		public bool isExisted(string attribute, string value)
 		{
+            if (string.IsNullOrEmpty(attribute) || string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
             value = value.ToLower();
 			Model found = _items.Find(x => x.GetType().GetProperty(attribute).GetValue(x, null).ToString() == value);
 			if (found != null)

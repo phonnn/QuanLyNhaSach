@@ -5,10 +5,6 @@
 }
 @using QuanLyNhaSach.Entities;
 
-<form method="post">
-	<input type="text" name="key" placeholder="Từ khoá tìm kiếm...">
-    <input type="submit" value="Tìm kiếm"/>
-</form>
 <div><a href="/Book/Add">Thêm mới</a></div>
 <table>
 	<tr>
@@ -17,6 +13,7 @@
 		<th>Thể loại</th>
 		<th>Tác giả</th>
 		<th>Giá bìa</th>
+		<th>Số lượng</th>
 		<th>Thao tác</th>
 	</tr>
 	@foreach (Book item in Model.books)
@@ -27,6 +24,7 @@
 		<td>@item.TypeNavigation.Name</td>
 		<td>@item.AuthorNavigation.Name</td>
 		<td>@item.Price</td>
+		<td>@item.Quantity</td>
 		<td><a href="/Book/Update?id=@item.Id">Sửa</a> | <a href="/Book/Delete?id=@item.Id">Xoá</a></td>
 	</tr>
 	}

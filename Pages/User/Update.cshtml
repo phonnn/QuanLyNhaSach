@@ -4,26 +4,54 @@
 	ViewData["Title"] = "User";
 }
 @using QuanLyNhaSach.Entities;
+@using QuanLyNhaSach.Processing;
+@attribute [Authorize(Roles = "Admin")]
 <form method="post">
 	<label>Tên nhân viên:</label><br>
-	<input type="text" name="name" value="@Model.user.Name"><br>
+	<input type="text" name="name" value="@Model.user.Name"><br><br>
 
 	<label>Mật khẩu</label><br>
 	<input type="text" name="password" value="@Model.user.Password"><br><br>
 
+	<label>Quyền:</label><br>
+	@{
+		IBase<Role> _role = (IBase<Role>)Injector.Injector.GetProcessing<RoleProcessing>();
+		List<Role> roles = await _role.GetAllAsync();
+		@for (int i = 0; i < roles.Count(); i++)
+		{
+			{
+				UserRole temp = @Model.user.UserRoles.FirstOrDefault((item) => item.Role == @roles[i].Id);
+				if (temp != null)
+				{
+					<div>
+						<input type="checkbox" value="@roles[i].Id" name="roles" checked/>
+						<label>@roles[i].Name</label>
+					</div>
+				} else
+				{
+					<div>
+						<input type="checkbox" value="@roles[i].Id" name="roles" />
+						<label>@roles[i].Name</label>
+					</div>
+				}
+			}
+
+		}
+	}
+	<br>
 	<label>Trạng Thái:</label><br>
 	@if (@Model.user.Status == 1)
 	{
 		<input type="radio" id="active" name="status" value="1" checked>
  		<label for="active">Hoạt động</label><br>
  		<input type="radio" id="inactive" name="status" value="0">
-		<label for="inactive">Không hoạt động</label><br>
+		<label for="inactive">Không hoạt động</label><br><br>
 	} else
 	{
 		<input type="radio" id="active" name="status" value="1">
  		<label for="active">Hoạt động</label><br>
  		<input type="radio" id="inactive" name="status" value="0" checked>
-		<label for="inactive">Không hoạt động</label><br>
+		<label for="inactive">Không hoạt động</label><br><br>
 	}
 
 	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/User/View';" ><br>

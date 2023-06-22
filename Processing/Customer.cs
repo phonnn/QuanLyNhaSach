@@ -1,9 +1,8 @@
 ﻿using QuanLyNhaSach.Entities;
-using System.Net;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class CustomerProcessing : Processing<Customer>, ICustomer
+	public class CustomerProcessing : Processing<Customer>, ICustomer
 	{
 		public async Task Add(string name, string address, string email, string number)
         {
@@ -83,7 +82,7 @@ namespace QuanLyNhaSach.Processing
 
 			if (!string.IsNullOrEmpty(number))
 			{
-				if (found.Email != number)
+				if (found.Number != number)
 				{
 					bool existed = isExisted("Number", number);
 					if (existed)
@@ -146,7 +145,7 @@ namespace QuanLyNhaSach.Processing
             return items;
         }
 		
-		public async Task SetDebt(string id)
+		public async Task SetDebt(string id, int amount)
 		{
 			Customer foundCustomer = await SearchById(id);
 			if (foundCustomer == null)
@@ -154,22 +153,13 @@ namespace QuanLyNhaSach.Processing
 				throw new Exception("Customer not found");
 			}
 
-			int debt = 0;
-			foreach (SellReceipt receipt in foundCustomer.SellReceipts)
+			if (amount == 0)
             {
-				foreach (ReceiptBook item in receipt.ReceiptBooks)
-                {
-					debt += item.Total;
-                }
+				return;
             }
 
-			foreach (Bill bill in foundCustomer.Bills)
-			{
-				debt -= bill.Amount;
-			}
-
 			foundCustomer.UpdatedAt = DateTime.Now;
-			foundCustomer.Debt = debt;
+			foundCustomer.Debt += amount;
 			await _model.UpdateAsync(id, foundCustomer);
 		}
 	}

@@ -1,0 +1,14 @@
+﻿@page
+@model QuanLyNhaSach.Pages.User.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+@attribute [AllowAnonymous]
+<form method="post">
+    <label>Tên đăng nhập:</label><br>
+    <input asp-for="Username" /><br><br>
+
+    <label>Mật khẩu:</label><br>
+    <input asp-for="Password" type="password" /><br><br>
+    <button type="submit">Login</button>
+</form>

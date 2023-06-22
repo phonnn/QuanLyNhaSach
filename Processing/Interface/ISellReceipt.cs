@@ -6,6 +6,7 @@ namespace QuanLyNhaSach.Processing
     {
         Task<SellReceipt> SellAdd(string customerId, List<string> bookIds, List<int> prices, List<int> amounts);
         Task SellUpdate(string receiptId, string customerId, List<string> bookIds, List<int> prices, List<int> amounts);
-		List<SellReceipt> SearchByCustomer(string customerId);
-	}
+		List<Receipt> SearchByCustomer(string customerId);
+        Task<SellReceipt> SearchById(string id);
+    }
 }

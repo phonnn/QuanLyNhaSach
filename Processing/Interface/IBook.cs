@@ -8,5 +8,6 @@ namespace QuanLyNhaSach.Processing
         Task<Book> Update(string id, string name, string typeId, string authorId, int price);
 		List<Book> Search(string name, string typeId, string authorId);
 		bool CheckAll(List<string> bookIds);
+		Task SetQuantity(string id, int amount);
 	}
 }

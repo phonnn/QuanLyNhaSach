@@ -21,8 +21,9 @@ namespace QuanLyNhaSach.Pages.User
 
         [BindProperty]
         public string Status { get; set; }
-
-        public async Task OnGet()
+		[BindProperty]
+		public List<string> Roles { get; set; }
+		public async Task OnGet()
         {
             user = await _Processing.SearchById(ID);
         }
@@ -31,8 +32,9 @@ namespace QuanLyNhaSach.Pages.User
             try
             {
                 IUser _tempProcessing = (IUser)_Processing;
-                user = await _tempProcessing.Update(ID, Name, Password, Status);
-                Response.Redirect("/User/View");
+                await _tempProcessing.Update(ID, Name, Password, Status, Roles);
+				user = await _Processing.SearchById(ID);
+				Response.Redirect("/User/View");
             }
             catch (Exception ex)
             {

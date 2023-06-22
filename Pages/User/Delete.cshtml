@@ -3,8 +3,8 @@
 @{
 	ViewData["Title"] = "User";
 }
-
-<div>Bạn có muốn xoá tác giả @Model.user.Name không?</div>
+@attribute [Authorize(Roles = "Admin")]
+<div>Bạn có muốn xoá nhân viên @Model.user.Name không?</div>
 <div>@Model.notify</div>
 <form method="post">
 	<input type="submit" value="Có"> <input type="button" value="Không" onclick="window.location='/User/View';" ><br>

@@ -40,6 +40,7 @@ namespace QuanLyNhaSach.DataAccess
 			}
 
             await _dbContext.BulkInsertAsync(entities);
+            await _dbSet.ToListAsync();
             return;
         }
         public async Task UpdateAsync(string id, TEntity newEntity)
@@ -76,6 +77,7 @@ namespace QuanLyNhaSach.DataAccess
         public async Task BatchUpdateAsync(List<TEntity> entities)
         {
             await _dbContext.BulkUpdateAsync(entities);
+            await _dbSet.ToListAsync();
             return;
         }
         public async Task DeleteAsync(TEntity entity)
@@ -88,6 +90,7 @@ namespace QuanLyNhaSach.DataAccess
         public async Task BatchDeleteAsync(List<TEntity> entities)
         {
             await _dbContext.BulkDeleteAsync(entities);
+            await _dbSet.ToListAsync();
             return;
         }
     }

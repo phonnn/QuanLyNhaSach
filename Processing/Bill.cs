@@ -1,8 +1,9 @@
-﻿using QuanLyNhaSach.Entities;
+﻿using Microsoft.AspNetCore.Authorization;
+using QuanLyNhaSach.Entities;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class BillProcessing : Processing<Bill>, IBill
+	public class BillProcessing : Processing<Bill>, IBill
 	{
 		private readonly IBase<Customer> _customer = (IBase<Customer>)Injector.Injector.GetProcessing<CustomerProcessing>();
 		public async Task Add(string customerId, int amount)
@@ -31,7 +32,7 @@ namespace QuanLyNhaSach.Processing
 
 			await _model.AddAsync(newBill);
 			ICustomer _tempCustomer = (ICustomer)_customer;
-			await _tempCustomer.SetDebt(customerId);
+			await _tempCustomer.SetDebt(customerId, -amount);
 		}
 		public async Task<Bill> Update(string id, string customerId="", int amount=0)
         {
@@ -48,8 +49,15 @@ namespace QuanLyNhaSach.Processing
             }
 
 			Customer oldCustomer = foundBill.CustomerNavigation;
+			int oldAmount = foundBill.Amount;
+			if (amount > 0)
+			{
+				foundBill.Amount = amount;
+				updated = true;
+			}
+
 			Customer newCustomer = null;
-			if (customerId != null)
+			if (customerId != "" && customerId != foundBill.Customer.ToString())
             {
 				newCustomer = await _customer.SearchById(customerId);
 				if (newCustomer == null)
@@ -61,26 +69,22 @@ namespace QuanLyNhaSach.Processing
 				updated = true;
 			}
 
-			if (amount > 0)
-            {
-				foundBill.Amount = amount;
-				updated = true;
-			}
-
 			if (updated)
             {
 				foundBill.UpdatedAt = DateTime.Now;
 			}
 
-			await _model.UpdateAsync(id, foundBill);
-
 			ICustomer _tempCustomer = (ICustomer)_customer;
-			await _tempCustomer.SetDebt(oldCustomer.Id.ToString());
 			if (newCustomer != null)
             {
-				await _tempCustomer.SetDebt(newCustomer.Id.ToString());
+				await _tempCustomer.SetDebt(newCustomer.Id.ToString(), -foundBill.Amount);
+				await _tempCustomer.SetDebt(oldCustomer.Id.ToString(), oldAmount);
+			} else
+            {
+				await _tempCustomer.SetDebt(oldCustomer.Id.ToString(), oldAmount - foundBill.Amount);
 			}
 
+			await _model.UpdateAsync(id, foundBill);
 			return foundBill;
         }
 		public List<Bill> Search(string customerId)
@@ -94,13 +98,14 @@ namespace QuanLyNhaSach.Processing
 			Bill foundBill = await _model.GetByIdAsync(id);
 			if (foundBill != null)
 			{
+				ICustomer _tempCustomer = (ICustomer)_customer;
+				await _tempCustomer.SetDebt(foundBill.Customer.ToString(), foundBill.Amount);
+
 				await _model.DeleteAsync(foundBill);
 				_items = await _model.GetListAsync();
 				deleted = true;
 			}
 
-			ICustomer _tempCustomer = (ICustomer)_customer;
-			await _tempCustomer.SetDebt(foundBill.Customer.ToString());
 			return deleted;
 		}
 	}

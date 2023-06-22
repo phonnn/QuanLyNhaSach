@@ -1,0 +1,12 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Receipt.DeleteModel
+@{
+	ViewData["Title"] = "Book Type";
+}
+
+<div>Bạn có muốn xoá hoá đơn @Model.receipt.Id không?</div>
+<div>@Model.notify</div>
+<form method="post">
+	<input type="submit" value="Có"> <input type="button" value="Không" onclick="history.go(-1); return false;" ><br>
+</form>
+

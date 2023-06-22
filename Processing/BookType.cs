@@ -1,8 +1,9 @@
-﻿using QuanLyNhaSach.Entities;
+﻿using Microsoft.AspNetCore.Authorization;
+using QuanLyNhaSach.Entities;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class BookTypeProcessing : Processing<BookType>, IBookType
+	public class BookTypeProcessing : Processing<BookType>, IBookType
     {
 		public async Task Add(string name) 
         {

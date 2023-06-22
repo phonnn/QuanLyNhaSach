@@ -7,6 +7,6 @@
 <div>Bạn có muốn xoá phiếu thanh toán @Model.bill.Id không?</div>
 <div>@Model.notify</div>
 <form method="post">
-	<input type="submit" value="Có"> <input type="button" value="Không" onclick="window.location='/Bill/View';" ><br>
+	<input type="submit" value="Có"> <input type="button" value="Không" onclick="history.go(-1); return false;" ><br>
 </form>
 

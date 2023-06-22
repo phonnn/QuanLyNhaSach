@@ -1,9 +1,12 @@
 ﻿using QuanLyNhaSach.Entities;
+using QuanLyNhaSach.DataAccess;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuanLyNhaSach.Processing
 {
     public class RecieptBookProcessing : Processing<ReceiptBook>, IReceiptBook
     {
+        protected IModel<ReceiptBook> _model = (IModel<ReceiptBook>)Injector.Injector.SetModel<ReceiptBook>(new ReceiptBookModel());
         public async Task Add(List<ReceiptBook> items)
         {
             if (items.Count == 0)
@@ -30,17 +33,22 @@ namespace QuanLyNhaSach.Processing
 
         public async Task<bool> DeleteByReceipt(Receipt receipt)
         {
-            bool deleted = false;
             List<ReceiptBook> items = (List<ReceiptBook>)receipt.ReceiptBooks;
             if (items.Count != 0)
             {
-                await _model.BatchDeleteAsync(items);
-                deleted = true;
+                return true;
             }
 
-            return deleted;
+            await _model.BatchDeleteAsync(items);
+            return true;
         }
 
+        public async Task<List<ReceiptBook>> GetByReceipt(string receiptId)
+        {
+            IReceiptBookModel _tempModel = (IReceiptBookModel)_model;          
+            List<ReceiptBook> items = await _tempModel.GetByReceipt(receiptId);
+            return items;
+        }
     }
 }
 

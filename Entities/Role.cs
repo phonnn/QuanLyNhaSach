@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace QuanLyNhaSach.Entities
+﻿namespace QuanLyNhaSach.Entities
 {
     public partial class Role : Base
     {

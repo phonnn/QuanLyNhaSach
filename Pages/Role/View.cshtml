@@ -1,0 +1,25 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Role.ViewModel
+@{
+	ViewData["Title"] = "Role";
+}
+@using QuanLyNhaSach.Entities;
+@attribute [Authorize(Roles = "Admin")]
+<form method="post">
+	<input type="text" name="role" placeholder="Thêm quyền mới...">
+    <input type="submit" value="Thêm"/>
+</form>
+
+@Model.notify
+<table>
+	<tr>
+		<th>Quyền</th>
+	</tr>
+	@foreach (Role item in Model.roles)
+	{
+	<tr>
+		<td>@item.Name</td>
+		<td><a href="/Role/Update?id=@item.Id">Sửa</a> | <a href="/Role/Delete?id=@item.Id">Xoá</a></td>
+	</tr>
+	}
+</table>

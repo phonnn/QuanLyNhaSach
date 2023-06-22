@@ -1,0 +1,105 @@
+CREATE TABLE "User" (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    username varchar(20) NOT NULL UNIQUE,
+    "password" varchar(20) NOT NULL,
+    "name" varchar(255),
+    "status" int CHECK ("status" IN (0, 1))
+);
+
+CREATE TABLE "Role" (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "name" varchar(20) NOT NULL UNIQUE
+);
+
+CREATE TABLE UserRole (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "user" uniqueidentifier FOREIGN KEY REFERENCES "User"(id) ON DELETE CASCADE,
+	"role" uniqueidentifier FOREIGN KEY REFERENCES "Role"(id) ON DELETE CASCADE
+);
+
+CREATE TABLE BookType (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "name" varchar(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE Author (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "name" varchar(255)
+);
+
+CREATE TABLE Book (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "name" varchar(255) NOT NULL,
+	price int NOT NULL,
+	quantity int NOT NULL DEFAULT 0,
+	"type" uniqueidentifier FOREIGN KEY REFERENCES BookType(id),
+	author uniqueidentifier FOREIGN KEY REFERENCES Author(id)
+);
+
+CREATE TABLE Customer (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "name" varchar(255) NOT NULL,
+	"address" varchar(255),
+	number char(10),
+	email varchar(255),
+	debt int DEFAULT 0
+);
+
+CREATE TABLE Bill (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+	customer uniqueidentifier FOREIGN KEY REFERENCES Customer(id) ON DELETE CASCADE,
+	amount int NOT NULL
+);
+
+CREATE TABLE Receipt (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+);
+
+CREATE TABLE ReceiptBook (
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	receipt uniqueidentifier FOREIGN KEY REFERENCES Receipt(id) ON DELETE CASCADE,
+	book uniqueidentifier FOREIGN KEY REFERENCES Book(id),
+	amount int NOT NULL,
+	price int NOT NULL,
+	total int NOT NULL
+);
+
+CREATE TABLE BuyReceipt (
+    id uniqueidentifier PRIMARY KEY FOREIGN KEY REFERENCES Receipt(id) ON DELETE CASCADE,
+	"user" uniqueidentifier FOREIGN KEY REFERENCES "User"(id)
+);
+
+CREATE TABLE SellReceipt (
+    id uniqueidentifier PRIMARY KEY FOREIGN KEY REFERENCES Receipt(id) ON DELETE CASCADE,
+	customer uniqueidentifier FOREIGN KEY REFERENCES Customer(id)
+);
+
+CREATE TABLE Parameter (
+    id uniqueidentifier PRIMARY KEY DEFAULT newsequentialid(),
+	createdAt datetime2 DEFAULT GETDATE(),
+	updatedAt datetime2 DEFAULT GETDATE(),
+    "name" varchar(50) NOT NULL UNIQUE,
+	"type" varchar(50) NOT NULL,
+	"value" varchar(255),
+	"status" int CHECK ("status" IN (0, 1))
+);

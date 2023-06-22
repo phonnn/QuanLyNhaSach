@@ -28,6 +28,6 @@
 	<label>Số lượng thanh toán:</label><br>
 	<input type="int" name="amount" value="@Model.bill.Amount"><br>
 
-	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/Bill/View';" ><br>
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="history.go(-1); return false;" ><br>
 	@Model.notify
 </form> 

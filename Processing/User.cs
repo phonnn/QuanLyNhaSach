@@ -1,14 +1,19 @@
-﻿using QuanLyNhaSach.Entities;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
+using QuanLyNhaSach.Entities;
+using System.Security.Claims;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class UserProcessing : Processing<User>, IUser
+	public class UserProcessing : Processing<User>, IUser
 	{
-		public async Task Add(string name, string username, string password)
+		private readonly IUserRole _userRole = (IUserRole)Injector.Injector.GetProcessing<UserRoleProcessing>();
+		public async Task Add(string name, string username, string password, List<string> roles)
         {
 			if (string.IsNullOrEmpty(name)
 				|| string.IsNullOrEmpty(username)
 				|| string.IsNullOrEmpty(password)
+				|| roles.Count == 0
 			)
 			{
 				throw new Exception("Invalid input");
@@ -29,12 +34,14 @@ namespace QuanLyNhaSach.Processing
             };
 
             await _model.AddAsync(newUser);
+			await _userRole.Add(newUser, roles);
         }
-        public async Task<User> Update(string id, string name="", string password="", string status="")
+        public async Task<User> Update(string id, string name="", string password="", string status="", List<string> roles=null)
         {
 			if (string.IsNullOrEmpty(name)
 				&& string.IsNullOrEmpty(password)
 				&& string.IsNullOrEmpty(status)
+				&& roles == null
 			)
 			{
 				throw new Exception("Invalid input");
@@ -69,15 +76,16 @@ namespace QuanLyNhaSach.Processing
 			}
 
 			await _model.UpdateAsync(id, found);
+			await _userRole.Update(found, roles);
 			return found;
         }
 
-		public async Task<User> Authorize(string username, string password)
+		public async Task<User> validateUser(string username, string password)
         {
 			await GetAllAsync();
 			User user = _items.Find(x => x.Username == username && x.Password == password);
 			if (user == null)
-            {
+			{
 				throw new Exception("Invalid username or password");
 			}
 
@@ -85,4 +93,3 @@ namespace QuanLyNhaSach.Processing
 		}
 	}
 }
-

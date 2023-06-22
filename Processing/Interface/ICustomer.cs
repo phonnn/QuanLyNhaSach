@@ -7,6 +7,6 @@ namespace QuanLyNhaSach.Processing
 		Task Add(string name, string address, string email, string number);
         Task<Customer> Update(string id, string name, string address, string email, string number);
 		List<Customer> Search(string name, string address, string email, string number);
-		Task SetDebt (string id);
+		Task SetDebt (string id, int amount);
 	}
 }

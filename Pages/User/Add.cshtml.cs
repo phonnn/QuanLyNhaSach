@@ -15,8 +15,9 @@ namespace QuanLyNhaSach.Pages.User
 		public string Username { get; set; }
 		[BindProperty]
 		public string Password { get; set; }
-
-		public void OnGet()
+		[BindProperty]
+		public List<string> Roles { get; set; }
+        public void OnGet()
         {
 
 		}
@@ -25,7 +26,7 @@ namespace QuanLyNhaSach.Pages.User
 		{
             try
             {
-                await _Processing.Add(Name, Username, Password);
+                await _Processing.Add(Name, Username, Password, Roles);
 				Response.Redirect("/User/View");
 			}
             catch (Exception ex)

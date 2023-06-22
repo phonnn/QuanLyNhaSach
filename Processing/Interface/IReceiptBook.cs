@@ -7,5 +7,6 @@ namespace QuanLyNhaSach.Processing
 		Task Add(List<ReceiptBook> items);
         Task Update(Receipt receipt, List<ReceiptBook> newItems);
 	    Task<bool> DeleteByReceipt(Receipt receipt);
+	    Task<List<ReceiptBook>> GetByReceipt(string receiptId);
     }
 }

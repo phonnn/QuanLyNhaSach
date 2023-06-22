@@ -18,6 +18,6 @@
 	<label>Số điện thoại:</label><br>
 	<input type="text" name="number"><br><br>
 
-	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="window.location='/Customer/View';" ><br>
+	<input type="submit" value="Thêm"><input type="button" value="Trở lại" onclick="history.go(-1); return false;" ><br>
 	@Model.notify
 </form> 

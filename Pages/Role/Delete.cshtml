@@ -1,0 +1,12 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Role.DeleteModel
+@{
+	ViewData["Title"] = "Role";
+}
+@attribute [Authorize(Roles = "Admin")]
+<div>Bạn có muốn xoá quyền @Model.role.Name không?</div>
+<div>@Model.notify</div>
+<form method="post">
+	<input type="submit" value="Có"> <input type="button" value="Không" onclick="window.location='/Role/View';" ><br>
+</form>
+

@@ -1,0 +1,41 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Receipt.ViewModel
+@{
+	ViewData["Title"] = "Receipt";
+}
+@using QuanLyNhaSach.Entities;
+@using System.Security.Claims;
+
+<input type="button" value="Nhập hàng" onclick="window.location='/Receipt/BuyAdd?user=@User.FindFirst(ClaimTypes.NameIdentifier).Value';">
+<input type="button" value="Bán hàng" onclick="window.location='/Receipt/SellAdd';">
+<table>
+	<tr>
+		<th>Mã hoá đơn</th>
+		<th>Ngày tạo</th>
+		<th>Loại hoá đơn</th>
+		<th>Nhân viên/Khách hàng</th>
+		<th>Tổng giá trị</th>
+		<th>Thao tác</th>
+	</tr>
+	@foreach (Receipt item in Model.receipts)
+	{
+	<tr>
+		<td>@item.Id</td>
+		<td>@item.CreatedAt</td>
+		@if (@item.SellReceipt != null) {
+			<td>Bán hàng</td>
+			<td>@item.SellReceipt.CustomerNavigation.Name</td>
+		} else {
+			<td>Nhập hàng</td>
+			<td>@item.BuyReceipt.UserNavigation.Name</td>
+		}
+		<td>@item.ReceiptBooks.Sum(item => item.Total)</td>
+
+		@if (@item.SellReceipt != null) {
+			<td><a href="/Receipt/SellUpdate?id=@item.Id">Sửa</a> | <a href="/Receipt/Delete?id=@item.Id">Xoá</a></td>
+		} else {
+			<td><a href="/Receipt/BuyUpdate?id=@item.Id">Sửa</a> | <a href="/Receipt/Delete?id=@item.Id">Xoá</a></td>
+		}
+	</tr>
+	}
+</table>

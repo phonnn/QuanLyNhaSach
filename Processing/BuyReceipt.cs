@@ -1,11 +1,14 @@
 ﻿using QuanLyNhaSach.Entities;
 using QuanLyNhaSach.DataAccess;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class BuyProcessing : ReceiptProcessing<BuyReceipt>, IBuyReceipt
+    public class BuyProcessing : ReceiptProcessing, IBuyReceipt
     {
         private readonly IBase<User> _user = (IBase<User>)Injector.Injector.GetProcessing<UserProcessing>();
+        protected IModel<BuyReceipt> _receipt = (IModel<BuyReceipt>)Injector.Injector.GetModel<BuyReceipt>();
+
         public async Task<BuyReceipt> BuyAdd(string userId, List<string> bookIds, List<int> prices, List<int> amounts)
         {
             if (string.IsNullOrEmpty(userId) || bookIds.Count == 0 
@@ -26,8 +29,8 @@ namespace QuanLyNhaSach.Processing
                 User = user.Id
 		    };
 
-            BuyReceipt result = await _model.AddAsync(newReceipt);
-            await Add(newReceipt.Id, bookIds, prices, amounts);
+            BuyReceipt result = await _receipt.AddAsync(newReceipt);
+            await Add(newReceipt, bookIds, prices, amounts);
             return result;
         }
         public async Task BuyUpdate(string receiptId, string userId = "", List<string> bookIds=null, List<int> prices=null, List<int> amounts=null)
@@ -41,13 +44,18 @@ namespace QuanLyNhaSach.Processing
                 throw new Exception("Invalid input");
             }
 
-            BuyReceipt foundReceipt = await SearchById(receiptId);
+            Receipt foundReceipt = await SearchById(receiptId);
             if (foundReceipt == null)
             {
                 throw new Exception("Receipt not found");
             }
 
-            if (userId != "")
+            if (foundReceipt.BuyReceipt == null)
+            {
+                throw new Exception("Receipt not found");
+            }
+
+            if (userId != "" && userId != foundReceipt.BuyReceipt.User.ToString())
             {
                 User user = await _user.SearchById(userId);
                 if (user == null)
@@ -55,7 +63,7 @@ namespace QuanLyNhaSach.Processing
                     throw new Exception("User not found");
                 }
 
-                foundReceipt.User = user.Id;
+                foundReceipt.BuyReceipt.User = user.Id;
                 foundReceipt.UpdatedAt = DateTime.Now;
                 await _model.UpdateAsync(receiptId, foundReceipt);
             }
@@ -65,10 +73,16 @@ namespace QuanLyNhaSach.Processing
                 await Update(receiptId, bookIds, prices, amounts);
             }
         }
-        public List<BuyReceipt> SearchByUser(string userId)
+        public List<Receipt> SearchByUser(string userId)
         {
-			List<BuyReceipt> items = _items.FindAll(x => x.User.ToString() == userId);
-			return items;
+            List<Receipt> items = _items.FindAll(x => x.BuyReceipt.User.ToString() == userId);
+            return items;
+		}
+
+        public async Task<BuyReceipt> SearchById(string id)
+        {
+            BuyReceipt item = await _receipt.GetByIdAsync(id);
+            return item;
 		}
 	}
 }

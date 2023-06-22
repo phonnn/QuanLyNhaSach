@@ -1,4 +1,5 @@
-﻿using QuanLyNhaSach.Entities;
+﻿using Microsoft.AspNetCore.Authorization;
+using QuanLyNhaSach.Entities;
 
 namespace QuanLyNhaSach.Processing
 {
@@ -153,6 +154,24 @@ namespace QuanLyNhaSach.Processing
 
             return true;
         }
-    }
+
+		public async Task SetQuantity(string id, int amount)
+		{
+			Book foundBook = await SearchById(id);
+			if (foundBook == null)
+			{
+				throw new Exception("Book not found");
+			}
+
+			if (amount == 0)
+			{
+				return;
+			}
+
+			foundBook.UpdatedAt = DateTime.Now;
+			foundBook.Quantity += amount;
+			await _model.UpdateAsync(id, foundBook);
+		}
+	}
 }
 

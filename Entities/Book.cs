@@ -12,6 +12,7 @@ namespace QuanLyNhaSach.Entities
         public Guid? Type { get; set; }
 
         public Guid? Author { get; set; }
+        public int Quantity { get; set; }
 
         public virtual Author? AuthorNavigation { get; set; }
 

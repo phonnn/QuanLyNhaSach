@@ -1,0 +1,14 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Role.UpdateModel
+@{
+	ViewData["Title"] = "Role";
+}
+@using QuanLyNhaSach.Entities;
+@attribute [Authorize(Roles = "Admin")]
+<form method="post">
+	<label>Quyền:</label><br>
+	<input type="text" name="name" value="@Model.role.Name"><br>
+
+	<input type="submit" value="Sửa"><input type="button" value="Trở lại" onclick="window.location='/Role/View';" ><br>
+	@Model.notify
+</form> 

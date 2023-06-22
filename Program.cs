@@ -1,6 +1,26 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using QuanLyNhaSach.DataAccess;
+using QuanLyNhaSach.Entities;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+.AddCookie(options => {
+    options.LoginPath = "/User/Login";
+    options.LogoutPath = "/User/Logout";
+    options.AccessDeniedPath = "/AccessDenied";
+});
+
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("isAdmin", policy =>
+	{
+		policy.RequireRole("Admin");
+	});
+});
+
 builder.Services.AddRazorPages();
 var app = builder.Build();
 
@@ -16,9 +36,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();

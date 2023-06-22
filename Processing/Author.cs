@@ -1,9 +1,10 @@
-﻿using QuanLyNhaSach.Entities;
+﻿using Microsoft.AspNetCore.Authorization;
+using QuanLyNhaSach.Entities;
 using System;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class AuthorProcessing : Processing<Author>, IAuthor
+	public class AuthorProcessing : Processing<Author>, IAuthor
     {
         public async Task Add(string name)
         {

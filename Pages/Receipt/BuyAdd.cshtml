@@ -1,0 +1,117 @@
+﻿@page
+@model QuanLyNhaSach.Pages.Receipt.BuyModel
+@{
+	ViewData["Title"] = "Buy";
+}
+
+@using QuanLyNhaSach.Entities;
+@using QuanLyNhaSach.Processing;
+<script>
+	function onChange() {
+		var book = document.getElementById('selectedBook');
+		var bookPrice = book.options[book.selectedIndex].innerHTML;
+		document.getElementById('price').value = bookPrice;
+	}
+
+	function addRow() {
+		var book = document.getElementById("selectedBook");
+		var bookId = book.value;
+		var bookName = book.options[book.selectedIndex].label;
+		var price = document.getElementById("price").value;
+		var amount = document.getElementById("amount").value;
+		var total = price * amount;
+		var mytab = document.getElementById("table");
+		var row = document.getElementById("table").insertRow(-1);
+		row.innerHTML = `
+			<td><input type="string" name ="items[${row.rowIndex - 1}].BookId" value="${bookId}"></td>
+			<td><input type="string" name ="items[${row.rowIndex - 1}].BookName" value="${bookName}"></td>
+			<td><input type="string" name ="items[${row.rowIndex - 1}].Price" value="${price}"></td>
+			<td><input type="string" name ="items[${row.rowIndex - 1}].Amount" value="${amount}"></td>
+			<td><input type="string" name ="items[${row.rowIndex - 1}].Total" value="${total}"></td>
+			<td><a href=# onclick="deleteRow(this);">Xoá</a></td>
+		`;
+	}
+
+	function deleteRow(btn) {
+	var row = btn.parentNode.parentNode;
+	row.parentNode.removeChild(row);
+	}
+</script>
+
+<form method="post">
+	<label>Người nhập hàng:</label><br>
+	<select name="user">
+		<option value=""></option>
+		@{
+			IBase<User> _user = (IBase<User>)Injector.Injector.GetProcessing<UserProcessing>();
+			List<User> users = await _user.GetAllAsync();
+			foreach (User item in users)
+			{	
+				if (Model.user != null && item.Id == Model.user.Id)
+				{
+					<option value="@item.Id" selected>@item.Name</option>
+				} else
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			}
+		}
+	</select><br>
+	<table>
+		<tr>
+			<th>Tên sách</th>
+			<th>Giá</th>
+			<th>Số lượng</th>
+		</tr>
+		<tr>
+			<td>
+				<select id="selectedBook" onchange="onChange();">
+					<option value=""></option>
+					@{
+						IBase<Entities.Book> _book = (IBase<Entities.Book>)Injector.Injector.GetProcessing<BookProcessing>();
+						List<Book> books = await _book.GetAllAsync();
+						foreach (Book item in books)
+						{
+							<option value=@item.Id label=@item.Name>@item.Price</option>
+						}
+					}
+				</select>
+			</td>
+			<td>
+				@{
+
+					<input type="number" id="price">
+				}
+			</td>
+			<td>
+				<input type="number" id="amount" value=1>
+			</td>
+		</tr>	
+	</table>
+	<input type="button" value="Thêm" onclick="addRow();"><br>
+
+	<table id="table">
+		<tr>
+			<th>Mã sách</th>
+			<th>Tên sách</th>
+			<th>Giá</th>
+			<th>Số lượng</th>
+			<th>Tổng</th>
+			<th>Hành động</th>
+		</tr>
+		@for (int i = 0; i < Model.items.Count; i++)
+		{
+			<tr>
+				<td>@Html.TextBoxFor(x => Model.items[i].BookId)</td>
+				<td>@Html.TextBoxFor(x => Model.items[i].BookName)</td>
+				<td>@Html.TextBoxFor(x => Model.items[i].Price)</td>
+				<td>@Html.TextBoxFor(x => Model.items[i].Amount)</td>
+				<td>@Html.TextBoxFor(x => Model.items[i].Total)</td>
+				<td><a href=# onclick="deleteRow(this);">Xoá</a></td>
+			</tr>
+		}
+	</table>
+	<input type="submit" value="Lưu"><input type="button" value="Trở lại" onclick="history.go(-1); return false;"><br>
+	@Model.notify
+</form> 
+

@@ -3,13 +3,16 @@ using QuanLyNhaSach.Entities;
 
 namespace QuanLyNhaSach.Processing
 {
-    public class ReceiptProcessing<TReceipt> : Processing<TReceipt> where TReceipt : Receipt, new()
+    public class ReceiptProcessing : Processing<Receipt>, IReceipt
     {
         protected readonly IBase<Book> _book = (IBase<Book>)Injector.Injector.GetProcessing<BookProcessing>();
         protected readonly IReceiptBook _receiptbook = (IReceiptBook)Injector.Injector.GetProcessing<RecieptBookProcessing>();
-        protected IModel<Receipt> _receipt = (IModel<Receipt>)Injector.Injector.GetModel<Receipt>();
 
-        public async Task Add(Guid receiptId, List<string> bookIds, List<int> prices, List<int> amounts)
+        public async Task<List<Receipt>> GetAll()
+        {
+            return await _model.GetListAsync();
+        }
+        public async Task Add(Receipt receipt, List<string> bookIds, List<int> prices, List<int> amounts)
         {
             IBook _tempBook = (IBook)_book;
             bool check = _tempBook.CheckAll(bookIds);
@@ -34,9 +37,17 @@ namespace QuanLyNhaSach.Processing
             for (int i = 0; i < bookIds.Count; i++)
             {
                 Book book = await _book.SearchById(bookIds[i]);
+                if (receipt.SellReceipt != null)
+                {
+                    if (book.Quantity < amounts[i])
+                    {
+                        throw new Exception($"Insufficient amount book {book.Name}");
+                    }
+                }
+
                 ReceiptBook newItem = new ReceiptBook()
                 {
-                    Receipt = receiptId,
+                    Receipt = receipt.Id,
                     Book = book.Id,
                     Price = prices[i],
                     Amount = amounts[i],
@@ -44,11 +55,16 @@ namespace QuanLyNhaSach.Processing
                 };
 
                 items.Add(newItem);
+                if (receipt.SellReceipt != null)
+                {
+                    await _tempBook.SetQuantity(book.Id.ToString(), -newItem.Amount);
+                } else
+                {
+                    await _tempBook.SetQuantity(book.Id.ToString(), newItem.Amount);
+                }
             }
 
             await _receiptbook.Add(items);
-            Receipt test = await _receipt.GetByIdAsync(receiptId.ToString());
-            return;
         }
 
         public async Task Update(string receiptId, List<string> bookIds, List<int> prices, List<int> amounts)
@@ -78,10 +94,23 @@ namespace QuanLyNhaSach.Processing
                 throw new Exception("Invalid amount");
             }
 
-            List<ReceiptBook> items = new List<ReceiptBook>();
+			foreach (ReceiptBook item in receipt.ReceiptBooks)
+			{
+				await _tempBook.SetQuantity(item.Book.ToString(), -item.Amount);
+			}
+
+			List<ReceiptBook> items = new List<ReceiptBook>();
             for (int i = 0; i < bookIds.Count; i++)
             {
                 Book book = await _book.SearchById(bookIds[i]);
+                if (receipt.SellReceipt != null)
+                {
+                    if (book.Quantity < amounts[i])
+                    {
+                        throw new Exception($"Insufficient amount book {book.Name}");
+                    }
+                }
+
                 ReceiptBook newItem = new ReceiptBook()
                 {
                     Receipt = receipt.Id,
@@ -90,15 +119,25 @@ namespace QuanLyNhaSach.Processing
                     Amount = amounts[i],
                     Total = prices[i] * amounts[i]
                 };
+
+                items.Add(newItem);
+                if (receipt.SellReceipt != null)
+                {
+                    await _tempBook.SetQuantity(book.Id.ToString(), -newItem.Amount);
+                }
+                else
+                {
+                    await _tempBook.SetQuantity(book.Id.ToString(), newItem.Amount);
+                }
             }
 
-            await _receiptbook.Update(receipt, items);
+			await _receiptbook.Update(receipt, items);
         }
 
         public override async Task<bool> Delete(string id)
         {
             bool deleted = false;
-            Receipt foundReceipt = await _receipt.GetByIdAsync(id);
+            Receipt foundReceipt = await _model.GetByIdAsync(id);
             if (foundReceipt == null)
             {
                 throw new Exception("Receipt not found");
@@ -107,14 +146,21 @@ namespace QuanLyNhaSach.Processing
             bool result = await _receiptbook.DeleteByReceipt(foundReceipt);
             if (result)
             {
-                await _receipt.DeleteAsync(foundReceipt);
-                deleted = true;
-            }
+                if (foundReceipt.SellReceipt != null)
+                {
+                    int total = foundReceipt.ReceiptBooks.Sum(item => item.Total);
+                    ICustomer _tempCustomer = (ICustomer)Injector.Injector.GetProcessing<CustomerProcessing>();
+                    await _tempCustomer.SetDebt(foundReceipt.SellReceipt.Customer.ToString(), -total);
+                }
 
-            ICustomer _tempCustomer = (ICustomer)Injector.Injector.GetProcessing<CustomerProcessing>();
-            if (foundReceipt.SellReceipt != null)
-            {
-                await _tempCustomer.SetDebt(foundReceipt.SellReceipt.Customer.ToString());
+				IBook _tempBook = (IBook)_book;
+				foreach (ReceiptBook item in foundReceipt.ReceiptBooks)
+				{
+					await _tempBook.SetQuantity(item.Book.ToString(), item.Amount);
+				}
+
+				await _model.DeleteAsync(foundReceipt);
+                deleted = true;
             }
 
             return deleted;

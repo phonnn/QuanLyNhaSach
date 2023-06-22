@@ -7,7 +7,6 @@ namespace QuanLyNhaSach.Pages.BookType
     public class UpdateModel : PageModel
     {
         private readonly IBase<Entities.BookType> _Processing = (IBase<Entities.BookType>)Injector.Injector.GetProcessing<BookTypeProcessing>();
-        private static string _referer = string.Empty;
         public string notify = string.Empty;
         public Entities.BookType type = new Entities.BookType();
 
@@ -19,7 +18,6 @@ namespace QuanLyNhaSach.Pages.BookType
 
         public async Task OnGet()
         {
-            _referer = Request.Headers["Referer"].ToString();
             type = await _Processing.SearchById(ID);
         }
         public async Task OnPost()
