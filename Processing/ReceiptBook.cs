@@ -34,7 +34,7 @@ namespace QuanLyNhaSach.Processing
         public async Task<bool> DeleteByReceipt(Receipt receipt)
         {
             List<ReceiptBook> items = (List<ReceiptBook>)receipt.ReceiptBooks;
-            if (items.Count != 0)
+            if (items.Count == 0)
             {
                 return true;
             }

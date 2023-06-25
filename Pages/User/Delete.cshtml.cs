@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 using QuanLyNhaSach.Processing;
 
 namespace QuanLyNhaSach.Pages.User
@@ -21,6 +22,16 @@ namespace QuanLyNhaSach.Pages.User
         {
             try
             {
+                ClaimsPrincipal userPrincipal = User;
+                string currentUserId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(currentUserId))
+                {
+                    if (currentUserId == ID)
+                    {
+                        throw new Exception("It doesn't support self-destruction");
+                    }
+                }
+
                 await _Processing.Delete(ID);
                 Response.Redirect("/User/View");
             }

@@ -42,8 +42,9 @@ namespace QuanLyNhaSach.Processing
 			return found;
         }
 
-        public Parameter Search(string name)
+        public async Task<Parameter> Search(string name)
 		{
+			await GetAllAsync();
 			if (string.IsNullOrEmpty(name))
 			{
 				throw new Exception("Invalid input");

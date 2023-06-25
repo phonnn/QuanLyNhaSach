@@ -21,14 +21,21 @@ namespace QuanLyNhaSach.DataAccess
         }
         public async Task<TEntity> GetByIdAsync(string id) 
         {
-            return await _dbSet.FirstOrDefaultAsync(item => item.Id.ToString() == id);
+            TEntity item = await _dbSet.FirstOrDefaultAsync(item => item.Id.ToString() == id);
+            if (item != null)
+            {
+                var entry = _dbContext.Entry(item);
+                entry.Reload();
+            }
+            
+            return item;
         }
         public async Task<TEntity> AddAsync(TEntity entity)
         {
             entity.CreatedAt = DateTime.Now;
             entity.UpdatedAt = DateTime.Now;
             _dbSet.Add(entity);
-            await _dbContext.SaveChangesAsync();
+            await Save();
             return entity;
         }
         public async Task BatchAddAsync(List<TEntity> entities)
@@ -39,7 +46,7 @@ namespace QuanLyNhaSach.DataAccess
 				entity.UpdatedAt = DateTime.Now;
 			}
 
-            await _dbContext.BulkInsertAsync(entities);
+            await _dbContext.BulkInsertAsync(entities, new BulkConfig {PreserveInsertOrder=false, SetOutputIdentity=true});
             await _dbSet.ToListAsync();
             return;
         }
@@ -70,28 +77,58 @@ namespace QuanLyNhaSach.DataAccess
                     }
                 }
 
-                await _dbContext.SaveChangesAsync();
+                await Save();
             }
+
             return;
         }
         public async Task BatchUpdateAsync(List<TEntity> entities)
         {
-            await _dbContext.BulkUpdateAsync(entities);
+            await _dbContext.BulkUpdateAsync(entities, new BulkConfig { PreserveInsertOrder = false, SetOutputIdentity = true });
             await _dbSet.ToListAsync();
             return;
         }
         public async Task DeleteAsync(TEntity entity)
         {
             _dbSet.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            await Save();
             return;
         }
         
         public async Task BatchDeleteAsync(List<TEntity> entities)
         {
-            await _dbContext.BulkDeleteAsync(entities);
+            await _dbContext.BulkDeleteAsync(entities, new BulkConfig { PreserveInsertOrder = false, SetOutputIdentity = true });
             await _dbSet.ToListAsync();
             return;
+        }
+        private async Task<bool> Save()
+        {
+            int maxRetryCount = 3;
+            int currentRetry = 0;
+            bool saved = false;
+            do
+            {
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    saved = true;
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    foreach (var entry in ex.Entries)
+                    {
+                        entry.Reload();
+                    }
+
+                    currentRetry++;
+                    if (currentRetry <= maxRetryCount)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(1));
+                    }
+                }
+            } while (!saved && currentRetry <= maxRetryCount);
+
+            return saved;
         }
     }
 }

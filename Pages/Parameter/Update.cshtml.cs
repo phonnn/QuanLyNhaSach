@@ -16,6 +16,9 @@ namespace QuanLyNhaSach.Pages.Parameter
         [BindProperty]
         public string Value { get; set; }
 
+        [BindProperty]
+        public string Status { get; set; }
+
         public async Task OnGet()
         {
 			parameter = await _Processing.SearchById(ID);
@@ -25,7 +28,7 @@ namespace QuanLyNhaSach.Pages.Parameter
             try
             {
 				IParameter _tempProcessing = (IParameter)_Processing;
-				parameter = await _tempProcessing.Update(ID, Value);
+				parameter = await _tempProcessing.Update(ID, Value, Status);
                 Response.Redirect("/Parameter/View");
             }
             catch (Exception ex)

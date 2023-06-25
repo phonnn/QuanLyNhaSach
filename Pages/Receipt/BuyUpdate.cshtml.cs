@@ -25,6 +25,7 @@ namespace QuanLyNhaSach.Pages.Receipt
 		{
 			_referer = Request.Headers["Referer"].ToString();
 			receipt = await _Processing.SearchById(ID);
+			items = new List<PreReceipt>();
 			foreach (ReceiptBook item in receipt.ReceiptBooks)
             {
 				Entities.Book book = await _book.SearchById(item.Book.ToString());
@@ -67,6 +68,7 @@ namespace QuanLyNhaSach.Pages.Receipt
 				Response.Redirect(_referer);
 			} catch (Exception ex)
 			{
+				receipt = await _Processing.SearchById(ID);
 				notify = ex.Message;
 			}
 		}

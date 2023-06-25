@@ -50,6 +50,8 @@ namespace QuanLyNhaSach.Processing
 			{
 				await _model.BatchDeleteAsync(items);
 			}
+
+			user.UserRoles.Clear();
 		}
 	}
 }

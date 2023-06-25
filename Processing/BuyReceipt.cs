@@ -8,6 +8,7 @@ namespace QuanLyNhaSach.Processing
     {
         private readonly IBase<User> _user = (IBase<User>)Injector.Injector.GetProcessing<UserProcessing>();
         protected IModel<BuyReceipt> _receipt = (IModel<BuyReceipt>)Injector.Injector.GetModel<BuyReceipt>();
+        private readonly IParameter _parameter = (IParameter)Injector.Injector.GetProcessing<ParameterProcessing>();
 
         public async Task<BuyReceipt> BuyAdd(string userId, List<string> bookIds, List<int> prices, List<int> amounts)
         {
@@ -23,6 +24,22 @@ namespace QuanLyNhaSach.Processing
 			{
 				throw new Exception("User not found");
 			}
+
+            Parameter maxQuantity = await _parameter.Search("TonKhoToiDa");
+            Parameter minBuy = await _parameter.Search("LuongNhapItNhat");
+            for (int i = 0; i < bookIds.Count; i++)
+            {
+                Book book = await _book.SearchById(bookIds[i]);
+                if (book.Quantity > int.Parse(maxQuantity.Value))
+                {
+                    throw new Exception("Overload");
+                }
+
+                if (amounts[i] < int.Parse(minBuy.Value))
+                {
+                    throw new Exception($"Buy amount must be greater than or equal to {int.Parse(minBuy.Value)}");
+                }
+            }
 
             BuyReceipt newReceipt = new BuyReceipt()
             {

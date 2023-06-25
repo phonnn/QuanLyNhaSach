@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Authorization;
-using QuanLyNhaSach.Entities;
-using System.Security.Claims;
+﻿using QuanLyNhaSach.Entities;
 
 namespace QuanLyNhaSach.Processing
 {
@@ -87,9 +84,27 @@ namespace QuanLyNhaSach.Processing
 			if (user == null)
 			{
 				throw new Exception("Invalid username or password");
+			} else if (user.Status != 1)
+            {
+				throw new Exception("This user has been deactivated");
 			}
 
 			return user;
+		}
+
+		public override async Task<bool> Delete(string id)
+		{
+			bool deleted = false;
+			User foundUser = await _model.GetByIdAsync(id);
+			if (foundUser != null)
+			{
+				await _userRole.DeleteByUser(foundUser);
+				await _model.DeleteAsync(foundUser);
+				_items = await _model.GetListAsync();
+				deleted = true;
+			}
+
+			return deleted;
 		}
 	}
 }

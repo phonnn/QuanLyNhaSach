@@ -85,8 +85,8 @@ namespace QuanLyNhaSach.DataAccess
 
                 entity.HasOne(d => d.CustomerNavigation).WithMany(p => p.Bills)
                     .HasForeignKey(d => d.Customer)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK__Bill__customer__5165187F");
+                    .HasConstraintName("FK__Bill__customer__5165187F")
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Book>(entity =>
@@ -271,11 +271,13 @@ namespace QuanLyNhaSach.DataAccess
 
                 entity.HasOne(d => d.BookNavigation).WithMany(p => p.ReceiptBooks)
                     .HasForeignKey(d => d.Book)
-                    .HasConstraintName("FK__ReceiptBoo__book__71D1E811");
+                    .HasConstraintName("FK__ReceiptBoo__book__71D1E811")
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.ReceiptNavigation).WithMany(p => p.ReceiptBooks)
                     .HasForeignKey(d => d.Receipt)
-                    .HasConstraintName("FK__ReceiptBo__recei__70DDC3D8");
+                    .HasConstraintName("FK__ReceiptBo__recei__70DDC3D8")
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -371,11 +373,13 @@ namespace QuanLyNhaSach.DataAccess
 
                 entity.HasOne(d => d.RoleNavigation).WithMany(p => p.UserRoles)
                     .HasForeignKey(d => d.Role)
-                    .HasConstraintName("FK__UserRole__role__34C8D9D1");
+                    .HasConstraintName("FK__UserRole__role__34C8D9D1")
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.UserNavigation).WithMany(p => p.UserRoles)
                     .HasForeignKey(d => d.User)
-                    .HasConstraintName("FK__UserRole__user__33D4B598");
+                    .HasConstraintName("FK__UserRole__user__33D4B598")
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             OnModelCreatingPartial(modelBuilder);

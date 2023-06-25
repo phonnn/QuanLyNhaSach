@@ -11,7 +11,7 @@ namespace QuanLyNhaSach.Injector
                    RegisteredObjects = new Dictionary<String, Object>();
         public static Object GetDb()
         {
-            string connectionString = "Server=DESKTOP-EK6KNM0;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
+            string connectionString = "Server=DESKTOP-9J7E6C9\\SQLDEV2019;Database=QuanLyNhaSach;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;";
             if (!RegisteredObjects.ContainsKey("database"))
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DataContext>();

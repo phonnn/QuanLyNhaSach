@@ -74,6 +74,7 @@ namespace QuanLyNhaSach.Pages.Receipt
 			}
 			catch (Exception ex)
 			{
+				receipt = await _Processing.SearchById(ID);
 				notify = ex.Message;
 			}
 		}

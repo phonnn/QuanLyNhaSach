@@ -47,7 +47,11 @@
 			List<User> users = await _user.GetAllAsync();
 			foreach (User item in users)
 			{	
-				if (Model.receipt.BuyReceipt.User != null && item.Id == Model.receipt.BuyReceipt.User)
+				if (item.Status != 1) {
+					continue;
+				}
+
+				if (Model.receipt.BuyReceipt != null && item.Id == Model.receipt.BuyReceipt.User)
 				{
 					<option value="@item.Id" selected>@item.Name</option>
 				} else

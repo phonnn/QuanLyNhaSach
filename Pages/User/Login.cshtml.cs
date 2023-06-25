@@ -10,6 +10,7 @@ namespace QuanLyNhaSach.Pages.User
     public class LoginModel : PageModel
     {
         private readonly IUser _Processing = (IUser)Injector.Injector.GetProcessing<UserProcessing>();
+        public string notify = string.Empty;
 
         [BindProperty]
         public string Username { get; set; }
@@ -47,7 +48,7 @@ namespace QuanLyNhaSach.Pages.User
                 return Page();
             } catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                notify = ex.Message;
                 return Page();
             }
         }

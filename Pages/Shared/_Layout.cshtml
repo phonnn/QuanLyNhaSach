@@ -40,6 +40,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Role/View">Quyền</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Parameter/View">Tham số</a>
+                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <form id="logoutForm" method="get" asp-page="/User/Logout" class="form-inline">
@@ -68,6 +71,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
 </body>
 </html>

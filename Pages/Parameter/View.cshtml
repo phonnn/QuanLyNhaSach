@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Parameter";
 }
 @using QuanLyNhaSach.Entities;
-
+@attribute [Authorize(Roles = "Admin")]
 <table>
 	<tr>
 		<th>Tên tham số</th>

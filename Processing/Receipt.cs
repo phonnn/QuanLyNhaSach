@@ -37,14 +37,6 @@ namespace QuanLyNhaSach.Processing
             for (int i = 0; i < bookIds.Count; i++)
             {
                 Book book = await _book.SearchById(bookIds[i]);
-                if (receipt.SellReceipt != null)
-                {
-                    if (book.Quantity < amounts[i])
-                    {
-                        throw new Exception($"Insufficient amount book {book.Name}");
-                    }
-                }
-
                 ReceiptBook newItem = new ReceiptBook()
                 {
                     Receipt = receipt.Id,
@@ -96,21 +88,14 @@ namespace QuanLyNhaSach.Processing
 
 			foreach (ReceiptBook item in receipt.ReceiptBooks)
 			{
-				await _tempBook.SetQuantity(item.Book.ToString(), -item.Amount);
+				await _tempBook.SetQuantity(item.Book.ToString(), item.Amount);
 			}
 
-			List<ReceiptBook> items = new List<ReceiptBook>();
+            receipt.ReceiptBooks.Clear();
+            List<ReceiptBook> items = new List<ReceiptBook>();
             for (int i = 0; i < bookIds.Count; i++)
             {
                 Book book = await _book.SearchById(bookIds[i]);
-                if (receipt.SellReceipt != null)
-                {
-                    if (book.Quantity < amounts[i])
-                    {
-                        throw new Exception($"Insufficient amount book {book.Name}");
-                    }
-                }
-
                 ReceiptBook newItem = new ReceiptBook()
                 {
                     Receipt = receipt.Id,

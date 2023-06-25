@@ -47,6 +47,10 @@
 			List<User> users = await _user.GetAllAsync();
 			foreach (User item in users)
 			{	
+				if (item.Status != 1) {
+					continue;
+				}
+
 				if (Model.user != null && item.Id == Model.user.Id)
 				{
 					<option value="@item.Id" selected>@item.Name</option>
